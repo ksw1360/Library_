@@ -1,37 +1,51 @@
 package com.example.Library.service;
 
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
+
+import com.example.Library.entity.Book;
+import com.example.Library.repository.BooksRepository;
+import com.example.Library.repository.RentalsRepository;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 public class RentalService {
-    private final JdbcTemplate jdbcTemplate;
+
+    private final BooksRepository booksRepository;
+    private final RentalsRepository rentalsRepository;
 
     @Transactional
-    public void rentBook(Long userId, Long bookId) {
-        // 대여 처리 로직 (예: 대여 기록 저장, 책 재고 감소 등)
-        String sql = "Select available_count from books where id = ?";
+    public void rentBook(Integer userId, Long bookId) {
 
-        Integer availableCount = jdbcTemplate.queryForObject(sql, Integer.class, bookId);
-        if (availableCount == null || availableCount == 0) {
+        // 1. 대여 가능한 재고 확인
+        Book book = booksRepository.findById(bookId)
+                .orElseThrow(() -> new RuntimeException("해당 도서를 찾을 수 없습니다."));
+
+        if ((Integer) book.getAvailableCount() <= 0) {
             throw new RuntimeException("해당 도서의 대출 가능한 재고가 없습니다.");
         }
 
-        // 도서 재고 1 감소
-        String updatesql = "UPDATE books SET available_count = available_count - 1 WHERE id = ?";
-        jdbcTemplate.update(updatesql, bookId);
+        // 2. 도서 재고 1 감소 (UPDATE 쿼리)
+        booksRepository.decreaseCount(bookId);
 
-        // 대여 기록 저장 (예: rental_records 테이블에 사용자 ID, 책 ID, 대여 날짜 등 저장)
-        String insertSql = "Insert into rentals (user_id, book_id, rent_date, due_date, status) " +
-                "VALUES (?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 'RENTED')";
+        // 3. 대여 기록 저장 (INSERT 쿼리)
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        Timestamp dueDate = Timestamp.valueOf(LocalDateTime.now().plusDays(7)); // 7일 뒤 반납
 
-        jdbcTemplate.update(insertSql, userId, bookId);
+        rentalsRepository.insertRental(
+                userId,
+                bookId.intValue(), // Long을 Integer로 변환 (Repository 파라미터 타입에 맞춤)
+                now,
+                dueDate,
+                "RENTED",
+                now,
+                String.valueOf(userId) // 등록자 (일단 userId로 넣음)
+        );
 
         System.out.println("도서 대여가 완료되었습니다. User ID: " + userId + ", Book ID: " + bookId);
-
     }
 }

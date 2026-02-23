@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>도서관 목록</title>
+    <style>
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+    <h2>📚 도서 대출 시스템</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>도서번호(ID)</th>
+                <th>ISBN</th> <th>제목</th>
+                <th>저자</th>
+                <th>대여가능수량</th>
+                <th>대출하기</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="book : ${books}">
+                
+                <td th:text="${book.id}">1</td>
+                <td th:text="${book.isbn}">978...</td> <td th:text="${book.bookname}">진짜 책 제목</td> <td th:text="${book.author}">저자</td>
+                
+                <td th:text="${book.availableCount}" 
+                    th:style="${book.availableCount == 0 ? 'color: red; font-weight: bold;' : ''}">5</td>
+                
+                <td>
+                    <a th:if="${book.availableCount > 0}" 
+                       th:href="@{/rent(userId=1, bookId=${book.id})}" 
+                       style="padding: 5px 10px; background: rgb(17, 209, 120); color: white; text-decoration: none; border-radius: 3px;">
+                       대출!
+                    </a>
+                    <span th:if="${book.availableCount == 0}" style="color: gray;">재고없음</span>
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

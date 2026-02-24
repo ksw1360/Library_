@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>무적 도서관 대출 시스템</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+
+    <div class="bg-white p-8 rounded-xl shadow-lg w-96">
+        <h1 class="text-2xl font-bold text-blue-600 mb-6 text-center">📚 도서 대출 시스템</h1>
+        
+        <form action="/rent" method="GET" class="flex flex-col space-y-4">
+            
+            <div>
+                <label class="block text-gray-700 font-bold mb-2">회원 번호 (User ID)</label>
+                <input type="number" name="userId" value="1" 
+                       class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500" required>
+            </div>
+            
+            <div>
+                <label class="block text-gray-700 font-bold mb-2">도서 번호 (Book ID)</label>
+                <input type="number" name="bookId" value="1" 
+                       class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500" required>
+            </div>
+
+            <button type="submit" 
+                    class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded mt-4 transition duration-200">
+                대출하기 🚀
+            </button>
+            
+        </form>
+    </div>
+
+</body>
+</html>

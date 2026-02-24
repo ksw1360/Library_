@@ -4,12 +4,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import com.example.Library.dto.RentalListDTO;
 import com.example.Library.entity.Book;
 import com.example.Library.repository.BooksRepository;
 import com.example.Library.repository.RentalsRepository;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -47,5 +49,11 @@ public class RentalService {
         );
 
         System.out.println("도서 대여가 완료되었습니다. User ID: " + userId + ", Book ID: " + bookId);
+    }
+
+    public List<RentalListDTO> getRentalList() {
+        var temp = rentalsRepository.findRentalListWithDetails();
+        return temp;
+
     }
 }

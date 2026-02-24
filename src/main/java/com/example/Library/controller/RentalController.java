@@ -1,16 +1,20 @@
 package com.example.Library.controller;
 
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
+import com.example.Library.dto.RentalListDTO;
 import com.example.Library.service.RentalService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.ui.Model;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 public class RentalController {
+
     private final RentalService rentalService;
 
     @GetMapping("/rent")
@@ -19,11 +23,34 @@ public class RentalController {
             @RequestParam("bookId") Long bookId) {
 
         try {
-            rentalService.rentBook(userId.intValue(), bookId); // Repository 파라미터 타입에 맞게 Long을 Integer로 변환
-            return "🎉 성공! " + userId + "번 회원이 " + bookId + "번 책을 무사히 대출했습니다. DB를 확인해보세요!";
+            rentalService.rentBook(userId.intValue(), bookId);
+
+            return "redirect:/rental/list";
 
         } catch (Exception e) {
-            return "❌ 실패: " + e.getMessage();
+            System.out.println("대출 실패: " + e.getMessage());
+            return "redirect:/rental/list";
         }
+    }
+
+    @GetMapping("/rental/list")
+    public String rentalList(Model model) {
+
+        List<RentalListDTO> list = rentalService.getRentalList();
+
+        try {
+            if (list != null) {
+                System.out.println("DB에서 가져온 대출 건수: " + list.size() + "건");
+
+                model.addAttribute("Rentals", list);
+            } else {
+                System.out.println("list 가 null입니다.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "rent-list";
     }
 }

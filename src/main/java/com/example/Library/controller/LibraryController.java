@@ -26,4 +26,11 @@ public class LibraryController {
         // 3. "book-list.html" 파일을 찾아서 브라우저에 띄워라!
         return "book-list";
     }
+
+    // 주소 강제 Direct 변경
+    @GetMapping("/")
+    public String home() {
+        // "/books" 주소로 곧바로 이동(리다이렉트) 시켜버립니다.
+        return "redirect:/books";
+    }
 }

@@ -27,7 +27,7 @@
             <tr th:each="book : ${books}">
                 
                 <td th:text="${book.id}">1</td>
-                <td th:text="${book.isbn}">978...</td> <td th:text="${book.bookname}">진짜 책 제목</td> <td th:text="${book.author}">저자</td>
+                <td th:text="${book.isbn}">978...</td> <td th:text="${book.bookname}">책 제목</td> <td th:text="${book.author}">저자</td>
                 
                 <td th:text="${book.availableCount}" 
                     th:style="${book.availableCount == 0 ? 'color: red; font-weight: bold;' : ''}">5</td>

@@ -1,0 +1,14 @@
+com\example\Library\repository\BooksRepository.class
+com\example\Library\LibraryApplication.class
+com\example\Library\repository\UserRepository.class
+com\example\Library\service\UserService.class
+com\example\Library\repository\RentalsRepository.class
+com\example\Library\controller\LibraryController.class
+com\example\Library\entity\Rentals$RentalsBuilder.class
+com\example\Library\entity\User$UserBuilder.class
+com\example\Library\entity\User.class
+com\example\Library\entity\Rentals.class
+com\example\Library\entity\Book.class
+com\example\Library\entity\Book$BookBuilder.class
+com\example\Library\service\RentalService.class
+com\example\Library\controller\RentalController.class
